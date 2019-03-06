@@ -2,6 +2,9 @@ import React, {Component} from 'react'
 import Aux from '../../hoc/Aux'
 import Sandwich from '../../components/Sandwich/Sandwich'
 import BuildControls from '../../components/Sandwich/BuildControls/BuildControls'
+import Modal from '../../components/UI/Modal/Modal'
+import OrderSummary from '../../components/Sandwich/OrderSummary/OrderSummary'
+
 
 interface State {
   ingredients: {
@@ -12,6 +15,7 @@ interface State {
   },
   totalPrice: number;
   purchasable: boolean;
+  purchasing: boolean;
 }
 
 class SubwayBuilder extends Component{
@@ -29,7 +33,8 @@ class SubwayBuilder extends Component{
       bacon: 0.7
     },
     totalPrice: 3,
-    purchasable: false
+    purchasable: false,
+    purchasing: false
   }
 
   addIngredientHandler = (type:string) => {
@@ -74,6 +79,18 @@ class SubwayBuilder extends Component{
     this.setState({purchasable: sum > 0})
   }
 
+  purchaseHandler = () => {
+    this.setState({purchasing:true})
+  }
+
+  purchaseCancelHandler = () => {
+    this.setState({purchasing:false})
+  }
+
+  purchaseContinueHandler = () => {
+    alert("Checking out!!!")
+  }
+
   render() {
     const disabledInfo:any = {
       ...this.state.ingredients
@@ -85,6 +102,14 @@ class SubwayBuilder extends Component{
 
     return (
       <Aux>
+        <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
+          <OrderSummary
+            ingredients={this.state.ingredients}
+            purchaseCanceled={this.purchaseCancelHandler}
+            purchaseContinued={this.purchaseContinueHandler}
+            price={this.state.totalPrice}
+          />
+        </Modal>
         <Sandwich ingredients={this.state.ingredients}/>
         <BuildControls
             ingredientAdded={this.addIngredientHandler}
@@ -92,6 +117,7 @@ class SubwayBuilder extends Component{
             disabled={disabledInfo}
             price={this.state.totalPrice}
             purchasable={this.state.purchasable}
+            ordered={this.purchaseHandler}
         />
       </Aux>
     )
