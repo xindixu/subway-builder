@@ -1,7 +1,7 @@
 .Sandwich {
   width: 100%;
   margin: auto;
-  height: 250px;
+  height: 700px;
   overflow: scroll;
   text-align: center;
   font-weight: bold;
@@ -19,7 +19,7 @@
 @media (min-width:500px) and (min-height:401px) {
   .Sandwich {
     width: 450px;
-    height: 400px;
+    height: 500px;
   }
 
 }
