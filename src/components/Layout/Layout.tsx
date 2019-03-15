@@ -11,7 +11,7 @@ interface State {
 
 class Layout extends Component {
   state:State = {
-    showSideDrawer: true
+    showSideDrawer: false
   }
 
   sideDrawerClosedHandler = () => {
