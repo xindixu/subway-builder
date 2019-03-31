@@ -6,12 +6,13 @@ import Backdrop from '../Backdrop/Backdrop'
 
 interface Props {
   show: boolean,
-  modalClosed: any
+  modalClosed: any,
+  children: any
 }
 
 class Modal extends Component<Props> {
   shouldComponentUpdate(nextProps:Props){
-    return nextProps.show != this.props.show
+    return nextProps.show != this.props.show || nextProps.children != this.props.children
   }
 
   componentWillUpdate(){
