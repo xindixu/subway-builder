@@ -4,8 +4,10 @@ import Sandwich from '../../components/Sandwich/Sandwich'
 import BuildControls from '../../components/Sandwich/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Sandwich/OrderSummary/OrderSummary'
-import axios from '../../axios-orders'
 import Spinner from '../../components/UI/Spinner/Spinner'
+import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler'
+
+import axios from '../../axios-orders'
 
 interface State {
   ingredients: {
@@ -22,12 +24,7 @@ interface State {
 
 class SubwayBuilder extends Component{
   state: State = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     prices: {
       salad: 0.5,
       cheese: 0.5,
@@ -38,6 +35,14 @@ class SubwayBuilder extends Component{
     purchasable: false,
     purchasing: false,
     loading: false
+  }
+
+  componentDidMount() {
+      axios.get('https://subway-builder.firebaseio.com/ingredients.json')
+      .then(response => {
+        this.setState({ingredients: response.data})
+      })
+      .catch(error => {})
   }
 
   addIngredientHandler = (type:string) => {
@@ -105,6 +110,7 @@ class SubwayBuilder extends Component{
       },
       deliveryMethod: 'fastest'
     }
+
     axios.post('/orders.json', order)
     .then(response => {
       this.setState({loading:false, purchasing: false})
@@ -123,35 +129,47 @@ class SubwayBuilder extends Component{
       disabledInfo[key] = (disabledInfo[key] <= 0)
     }
 
-    let orderSummary = (
-      <OrderSummary
-        ingredients={this.state.ingredients}
-        purchaseCanceled={this.purchaseCancelHandler}
-        purchaseContinued={this.purchaseContinueHandler}
-        price={this.state.totalPrice}
-      />
-    )
+    let orderSummary = <Spinner />
+
+
+    let sandwich = <Spinner />
+    if(this.state.ingredients != null){
+       sandwich = (
+         <Aux>
+          <Sandwich ingredients={this.state.ingredients}/>
+          <BuildControls
+              ingredientAdded={this.addIngredientHandler}
+              ingredientRemoved={this.removeIngredientHandler}
+              disabled={disabledInfo}
+              price={this.state.totalPrice}
+              purchasable={this.state.purchasable}
+              ordered={this.purchaseHandler}
+          />
+        </Aux>
+      )
+      orderSummary = (
+        <OrderSummary
+          ingredients={this.state.ingredients}
+          purchaseCanceled={this.purchaseCancelHandler}
+          purchaseContinued={this.purchaseContinueHandler}
+          price={this.state.totalPrice}
+        />
+      )
+    }
+
     if(this.state.loading){
       orderSummary = <Spinner/>
     }
-
     return (
       <Aux>
+        {sandwich}
         <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
-        <Sandwich ingredients={this.state.ingredients}/>
-        <BuildControls
-            ingredientAdded={this.addIngredientHandler}
-            ingredientRemoved={this.removeIngredientHandler}
-            disabled={disabledInfo}
-            price={this.state.totalPrice}
-            purchasable={this.state.purchasable}
-            ordered={this.purchaseHandler}
-        />
+
       </Aux>
     )
   }
 }
 
-export default SubwayBuilder
+export default WithErrorHandler(SubwayBuilder, axios)

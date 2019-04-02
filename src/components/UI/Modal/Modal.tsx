@@ -7,7 +7,7 @@ import Backdrop from '../Backdrop/Backdrop'
 interface Props {
   show: boolean,
   modalClosed: any,
-  children: any
+  children: any,
 }
 
 class Modal extends Component<Props> {
