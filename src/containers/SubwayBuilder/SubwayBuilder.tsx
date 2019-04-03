@@ -22,9 +22,13 @@ interface State {
   loading: boolean;
 }
 
-class SubwayBuilder extends Component{
+interface Props {
+  history:any
+}
+
+class SubwayBuilder extends Component<Props, State>{
   state: State = {
-    ingredients: null,
+    ingredients: {},
     prices: {
       salad: 0.5,
       cheese: 0.5,
@@ -38,6 +42,7 @@ class SubwayBuilder extends Component{
   }
 
   componentDidMount() {
+    console.log(this.props)
       axios.get('https://subway-builder.firebaseio.com/ingredients.json')
       .then(response => {
         this.setState({ingredients: response.data})
@@ -96,27 +101,37 @@ class SubwayBuilder extends Component{
   }
 
   purchaseContinueHandler = () => {
-    this.setState({loading: true})
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: 'Xindi Xu',
-        address: {
-          street1: '1234 Casper',
-          street2: 'Apt 22',
-        },
-        phone: '5127732222'
-      },
-      deliveryMethod: 'fastest'
-    }
+    // this.setState({loading: true})
+    // const order = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.totalPrice,
+    //   customer: {
+    //     name: 'Xindi Xu',
+    //     address: {
+    //       street1: '1234 Casper',
+    //       street2: 'Apt 22',
+    //     },
+    //     phone: '5127732222'
+    //   },
+    //   deliveryMethod: 'fastest'
+    // }
+    //
+    // axios.post('/orders.json', order)
+    // .then(response => {
+    //   this.setState({loading:false, purchasing: false})
+    // })
+    // .catch(error => {
+    //   this.setState({loading:false, purchasing: false})
+    // })
 
-    axios.post('/orders.json', order)
-    .then(response => {
-      this.setState({loading:false, purchasing: false})
-    })
-    .catch(error => {
-      this.setState({loading:false, purchasing: false})
+    const queryParams = []
+    for(let i in this.state.ingredients){
+      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i].toString()))
+    }
+    const queryString = queryParams.join('&')
+    this.props.history.push({
+      pathname:'/checkout',
+      search: queryString
     })
   }
 

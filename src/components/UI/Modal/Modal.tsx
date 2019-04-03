@@ -16,7 +16,7 @@ class Modal extends Component<Props> {
   }
 
   componentWillUpdate(){
-    console.log('[Modal] will update')
+    //console.log('[Modal] will update')
   }
   render(){
     return (

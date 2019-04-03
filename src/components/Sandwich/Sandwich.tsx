@@ -14,9 +14,6 @@ const Sandwich = (props:any) => {
         return arr.concat(el)
       }, [])
 
-  console.log(transformIngredients)
-
-
   return(
     <div className={styles.Sandwich}>
       <SandwichIngredient type="bread-top"/>

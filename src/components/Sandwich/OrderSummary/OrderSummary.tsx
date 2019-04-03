@@ -15,7 +15,7 @@ interface Props {
 
 class OrderSummary extends Component<Props> {
   componentWillUpdate(){
-    console.log('[OrderSummary] will update')
+    //console.log('[OrderSummary] will update')
   }
 
   render(){
