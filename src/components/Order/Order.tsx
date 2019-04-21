@@ -10,7 +10,7 @@ interface order{
 }
 
 const Order = (props:order) => {
-  const ingredients = []
+  const ingredients:Array<{name:string, amount:number}> = []
   for( let name in props.ingredients){
     ingredients.push({
       name: name,

@@ -19,7 +19,12 @@
     "noEmit": true,
     "jsx": "preserve",
     "downlevelIteration": true,
-    "noImplicitAny": true
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": false
   },
   "include": [
     "src"

@@ -8,7 +8,7 @@ type MyProps = {
 
 class SandwichIngredient extends Component<MyProps> {
   render(){
-    let ingredient = null
+    let ingredient:any 
 
     switch (this.props.type){
       case ('bread-bottom'):

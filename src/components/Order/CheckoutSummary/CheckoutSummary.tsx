@@ -1,10 +1,9 @@
-import React, {Component} from 'react'
+import React from 'react'
 import Sandwich from '../../Sandwich/Sandwich'
 import Button from '../../UI/Button/Button'
 import styles from './CheckoutSummary.module.css'
 
 const CheckoutSummary = (props:any) => {
-
   return (
     <div className={styles.CheckoutSummary}>
       <h1>We hope you enjoy your sandwich!</h1>

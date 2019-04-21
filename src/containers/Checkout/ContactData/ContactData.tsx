@@ -12,15 +12,65 @@ interface Props {
   history: any
 }
 
+interface State {
+  orderForm: {
+    [key:string]: Input
+  },
+  loading: boolean
+}
 
-class ContactData extends Component<Props> {
+interface Input {
+  elementType: string,
+  elementConfig: object,
+  value: string
+}
+
+class ContactData extends Component<Props, State> {
   state = {
-    name: '',
-    address: {
-      street1: '',
-      street2: '',
+    orderForm: {
+      name: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Casper'
+        },
+        value: ''
+      },
+      street1: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: '1234 Cat Street'
+        },
+        value: ''
+      },
+      street2: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Apt 222'
+        },
+        value: ''
+      },
+      phone: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'tel',
+          placeholder: '(123)888-7777'
+        },
+        value: ''
+      },
+      deliveryMethod: {
+        elementType: 'select',
+        elementConfig: {
+          options:[
+            {value:'fastest', display:'Fastest'},
+            {value:'cheapest', display:'Cheapest'}
+          ]
+        },
+        value: ''
+      },
     },
-    phone: '',
     loading: false
   }
 
@@ -55,12 +105,32 @@ class ContactData extends Component<Props> {
   }
 
   render() {
+    const formElementsArray:Array<{id:string, config:Input}> = []
+    for(let key in this.state.orderForm){
+      /*
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        placeholder: 'Casper'
+      },
+      value: ''
+      */
+
+      formElementsArray.push({
+        id: key,
+        config: this.state.orderForm[key.toString()]
+      })
+    }
     let form = (
       <form>
-        <Input inputtype="input" type="text" name="name" placeholder="Capser" />
-        <Input inputtype="input" type="text" name="address1" placeholder="1234 Cat Street" />
-        <Input inputtype="input" type="text" name="address2" placeholder="Apt 111" />
-        <Input inputtype="input" type="phone" name="phone" placeholder="(123)773-2039" />
+        <Input elementType="input" elementConfig />
+        {formElementsArray.map(formElement => {
+          <Input
+            elementType={formElement.config.elementType}
+            elementConfig={formElement.config.elementConfig}
+            value={formElement.config.value}/>
+          })
+        }
         <Button btnType="Success" clicked={this.orderHandler}>ORDER</Button>
       </form>
     )
