@@ -39,7 +39,6 @@ const Input = (props:any) => {
         value={props.value}
         onChange={props.changed}/>
   }
-  console.log(props.key)
 
   return(
     <div className={styles.Input}>

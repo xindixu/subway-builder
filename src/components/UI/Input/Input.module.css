@@ -5,15 +5,12 @@
 }
 
 .Label{
-  font-weight: bold;
   display: block;
   margin-bottom: 6px;
   text-align: left;
-
 }
 
 .InputElement {
-  font-weight: normal;
   width: 100%;
   box-sizing: border-box;
   display: block;

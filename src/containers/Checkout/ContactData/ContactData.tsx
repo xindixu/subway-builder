@@ -24,7 +24,12 @@ interface Input {
   elementType: string,
   elementConfig: object,
   value: string,
-  validation:object
+  validation?:Validation,
+  valid?: boolean
+}
+
+interface Validation{
+  required?: boolean
 }
 
 class ContactData extends Component<Props, State> {
@@ -40,7 +45,9 @@ class ContactData extends Component<Props, State> {
         value: '',
         validation:{
           required: true
-        }
+        },
+        valid: false
+
       },
       street1: {
         label: 'Address Line 1',
@@ -52,7 +59,9 @@ class ContactData extends Component<Props, State> {
         value: '',
         validation:{
           required: true
-        }
+        },
+        valid: false
+
       },
       street2: {
         label: 'Address Line 2',
@@ -64,7 +73,9 @@ class ContactData extends Component<Props, State> {
         value: '',
         validation:{
           required: true
-        }
+        },
+        valid: false
+
       },
       phone: {
         label: 'Phone Number',
@@ -76,7 +87,9 @@ class ContactData extends Component<Props, State> {
         value: '',
         validation:{
           required: true
-        }
+        },
+        valid: false
+
       },
       deliveryMethod: {
         label: 'Delivery Method',
@@ -96,9 +109,6 @@ class ContactData extends Component<Props, State> {
 
   orderHandler = (event: any) => {
     event.preventDefault()
-    console.log(this.props.ingredients)
-
-
     this.setState({ loading: true })
 
     const contact = {}
@@ -122,6 +132,14 @@ class ContactData extends Component<Props, State> {
       })
   }
 
+  checkValidity = (value:string, rules:Validation) => {
+    let isValid = false
+    if(rules.required){
+      isValid = value.trim() !== ''
+    }
+    return isValid
+  }
+
   inputChangedHandler = (event: any, inputIndentifier: string) => {
     console.log(event.target)
     const updatedOrderForm = {
@@ -131,7 +149,9 @@ class ContactData extends Component<Props, State> {
       ...updatedOrderForm[inputIndentifier]
     }
     updatedFormElement.value = event.target.value
+    updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation)
     updatedOrderForm[inputIndentifier] = updatedFormElement
+    console.log(updatedFormElement.valid)
     this.setState({ orderForm: updatedOrderForm })
 
   }
