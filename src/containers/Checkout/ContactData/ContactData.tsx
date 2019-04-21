@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import Button from '../../../components/UI/Button/Button'
 import styles from './ContactData.module.css';
 import axios from '../../../axios-orders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
+import Input from '../../../components/UI/Input/Input'
 
 interface Props {
-  ingredients:any,
+  ingredients: any,
   price: number,
-  history:any
+  history: any
 }
 
 
@@ -24,11 +25,11 @@ class ContactData extends Component<Props> {
   }
 
 
-  orderHandler = (event:any) =>{
+  orderHandler = (event: any) => {
     event.preventDefault()
     console.log(this.props.ingredients)
 
-    this.setState({loading: true})
+    this.setState({ loading: true })
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.price,
@@ -44,41 +45,29 @@ class ContactData extends Component<Props> {
     }
 
     axios.post('/orders.json', order)
-    .then(response => {
-      this.setState({loading:false})
-      this.props.history.push('/')
-    })
-    .catch(error => {
-      this.setState({loading:false})
-    })
+      .then(response => {
+        this.setState({ loading: false })
+        this.props.history.push('/')
+      })
+      .catch(error => {
+        this.setState({ loading: false })
+      })
   }
 
   render() {
     let form = (
       <form>
-        <label className={styles.Label}>
-          Name:
-          <input type="text" name="name" placeholder="Capser"/>
-        </label>
-        <label className={styles.Label}>
-          Address 1:
-          <input type="text" name="address1" placeholder="1234 Cat Street"/>
-        </label>
-        <label className={styles.Label}>
-          Address 2:
-          <input type="text" name="address2" placeholder="Apt 111"/>
-        </label>
-        <label className={styles.Label}>
-          Phone:
-          <input type="phone" name="phone" placeholder="(123)773-2039"/>
-        </label>
+        <Input inputtype="input" type="text" name="name" placeholder="Capser" />
+        <Input inputtype="input" type="text" name="address1" placeholder="1234 Cat Street" />
+        <Input inputtype="input" type="text" name="address2" placeholder="Apt 111" />
+        <Input inputtype="input" type="phone" name="phone" placeholder="(123)773-2039" />
         <Button btnType="Success" clicked={this.orderHandler}>ORDER</Button>
       </form>
     )
-    if(this.state.loading){
-      form = <Spinner/>
+    if (this.state.loading) {
+      form = <Spinner />
     }
-    else{
+    else {
 
     }
     return (

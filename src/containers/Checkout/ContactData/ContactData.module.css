@@ -1,14 +1,10 @@
 .ContactData {
   margin: 20px auto;
+  padding: 10px;
   width: 80%;
-  text-align: center
-}
-
-.Label{
-  margin: 0 auto;
-  display: block;
-  line-height: 2;
-  text-align: left;
+  text-align: center;
+  border: 1px solid #ccc;
+  shadow: 1px 2px #ccc;
 }
 
 .
