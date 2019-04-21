@@ -9,6 +9,7 @@ class Orders extends React.Component {
     orders: [],
     loading: true
   }
+
   componentDidMount(){
     axios.get('/orders.json')
       .then(response => {
@@ -30,8 +31,12 @@ class Orders extends React.Component {
   render() {
     return(
       <div>
-        <Order />
-        <Order />
+        {this.state.orders.map((order:any) => (
+          <Order
+            key={order.id}
+            ingredients={order.ingredients}
+          />
+        ))}
       </div>
     )
 
