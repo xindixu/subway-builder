@@ -16,21 +16,27 @@ interface ingredients {
 interface State {
   ingredients: {
     [key: string]: number;
-  }
+  },
+  price: number
 }
 
 class Checkout extends Component<Props, State> {
   state = {
-    ingredients: {  }
+    ingredients: {  },
+    price: 0
   }
 
-  componentDidMount(){
+  componentWillMount(){
       const query = new URLSearchParams(this.props.location.search)
       const ingredients:ingredients = {}
 
       for(let param of query.entries()){
-        console.log(param)
-        ingredients[param[0]] = +(param[1])
+        if(param[0] === 'price'){
+          this.setState({price: +(param[1])})
+        }
+        else{
+          ingredients[param[0]] = +(param[1])
+        }
       }
 
       this.setState({ingredients:ingredients})
@@ -56,7 +62,7 @@ class Checkout extends Component<Props, State> {
         />
         <Route
           path={this.props.match.path + '/contact'}
-          component={ContactData}/>
+          render={(props) => (<ContactData ingredients={this.state.ingredients} price={this.state.price} {...props}/>)}/>
       </div>
     )
   }

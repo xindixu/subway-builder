@@ -1,13 +1,21 @@
 .ContactData {
   margin: 20px auto;
   width: 80%;
-  text-align: center;
+  text-align: center
 }
 
+.Label{
+  margin: 0 auto;
+  display: block;
+  line-height: 2;
+  text-align: left;
+}
+
+.
 @media (min-width:600px) {
   .ContactData {
     margin: 20px auto;
-    width: 500px ;
+    width: 500px;
     text-align: center;
   }
 }

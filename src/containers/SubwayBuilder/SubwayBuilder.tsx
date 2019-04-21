@@ -101,33 +101,13 @@ class SubwayBuilder extends Component<Props, State>{
   }
 
   purchaseContinueHandler = () => {
-    // this.setState({loading: true})
-    // const order = {
-    //   ingredients: this.state.ingredients,
-    //   price: this.state.totalPrice,
-    //   customer: {
-    //     name: 'Xindi Xu',
-    //     address: {
-    //       street1: '1234 Casper',
-    //       street2: 'Apt 22',
-    //     },
-    //     phone: '5127732222'
-    //   },
-    //   deliveryMethod: 'fastest'
-    // }
-    //
-    // axios.post('/orders.json', order)
-    // .then(response => {
-    //   this.setState({loading:false, purchasing: false})
-    // })
-    // .catch(error => {
-    //   this.setState({loading:false, purchasing: false})
-    // })
+
 
     const queryParams = []
     for(let i in this.state.ingredients){
       queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i].toString()))
     }
+    queryParams.push(`price=${this.state.totalPrice}`)
     const queryString = queryParams.join('&')
     this.props.history.push({
       pathname:'/checkout',
