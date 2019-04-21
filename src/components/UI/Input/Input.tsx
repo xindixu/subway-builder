@@ -39,11 +39,14 @@ const Input = (props:any) => {
         value={props.value}
         onChange={props.changed}/>
   }
+  console.log(props.key)
 
   return(
     <div className={styles.Input}>
-      {/* <label>{props.label}</label> */}
-      {inputElement}
+      <label className={styles.Label}>
+        {props.label}
+        {inputElement}
+      </label>
     </div>
   );
 }
