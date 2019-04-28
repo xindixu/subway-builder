@@ -17,6 +17,8 @@ interface State {
     [key: string]: Input
   },
   loading: boolean
+  formIsValid: boolean
+
 }
 
 interface Input {
@@ -25,7 +27,8 @@ interface Input {
   elementConfig: object,
   value: string,
   validation?:Validation,
-  valid?: boolean
+  valid?: boolean,
+  touched?: boolean
 }
 
 interface Validation{
@@ -46,8 +49,8 @@ class ContactData extends Component<Props, State> {
         validation:{
           required: true
         },
-        valid: false
-
+        valid: false,
+        touched: false
       },
       street1: {
         label: 'Address Line 1',
@@ -60,8 +63,8 @@ class ContactData extends Component<Props, State> {
         validation:{
           required: true
         },
-        valid: false
-
+        valid: false,
+        touched: false
       },
       street2: {
         label: 'Address Line 2',
@@ -74,8 +77,8 @@ class ContactData extends Component<Props, State> {
         validation:{
           required: true
         },
-        valid: false
-
+        valid: false,
+        touched: false
       },
       phone: {
         label: 'Phone Number',
@@ -88,7 +91,8 @@ class ContactData extends Component<Props, State> {
         validation:{
           required: true
         },
-        valid: false
+        valid: false,
+        touched: false
 
       },
       deliveryMethod: {
@@ -100,10 +104,16 @@ class ContactData extends Component<Props, State> {
             { value: 'cheapest', display: 'Cheapest' }
           ]
         },
-        value: ''
+        value: '', 
+        validation:{
+          required: true
+        },
+        valid: false,
+        touched: false
       },
     },
-    loading: false
+    loading: false,
+    formIsValid: false
   }
 
 
@@ -141,7 +151,6 @@ class ContactData extends Component<Props, State> {
   }
 
   inputChangedHandler = (event: any, inputIndentifier: string) => {
-    console.log(event.target)
     const updatedOrderForm = {
       ...this.state.orderForm
     }
@@ -150,9 +159,15 @@ class ContactData extends Component<Props, State> {
     }
     updatedFormElement.value = event.target.value
     updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation)
+    updatedFormElement.touched = true
     updatedOrderForm[inputIndentifier] = updatedFormElement
-    console.log(updatedFormElement.valid)
-    this.setState({ orderForm: updatedOrderForm })
+    this.setState({ orderForm: updatedOrderForm }) 
+
+    let formIsValid = true
+    for(let inputIndentifier in updatedOrderForm){
+      formIsValid = updatedOrderForm[inputIndentifier].valid && formIsValid
+    }
+    this.setState({ formIsValid: formIsValid }) 
 
   }
 
@@ -174,11 +189,14 @@ class ContactData extends Component<Props, State> {
               elementType={formElement.config.elementType}
               elementConfig={formElement.config.elementConfig}
               value={formElement.config.value}
+              invalid={!formElement.config.valid}
+              shouldValidate={formElement.config.validation}
+              touched={formElement.config.touched}
               changed={(event: any) => { this.inputChangedHandler(event, formElement.key) }} />
           )
         })
         }
-        <Button btnType="Success" clicked={this.orderHandler}>ORDER</Button>
+        <Button btnType="Success" disabled={!this.state.formIsValid} clicked={this.orderHandler}>ORDER</Button>
       </form>
     )
     if (this.state.loading) {
