@@ -104,7 +104,7 @@ class ContactData extends Component<Props, State> {
             { value: 'cheapest', display: 'Cheapest' }
           ]
         },
-        value: '', 
+        value: 'fastest', 
         validation:{
           required: true
         },
