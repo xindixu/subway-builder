@@ -9,7 +9,7 @@ interface control {
 const controls: control[] = [
     { label: 'Salad', type: 'salad' },
     { label: 'Bacon', type: 'bacon' },
-    { label: 'Cheeese', type: 'cheese' },
+    { label: 'Cheese', type: 'cheese' },
     { label: 'Meat', type: 'meat' },
 ]
 

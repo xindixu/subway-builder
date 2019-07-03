@@ -1,4 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import * as types from '../../store/action'
+
 import Aux from '../../hoc/Aux'
 import Sandwich from '../../components/Sandwich/Sandwich'
 import BuildControls from '../../components/Sandwich/BuildControls/BuildControls'
@@ -10,32 +13,24 @@ import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler'
 import axios from '../../axios-orders'
 
 interface State {
-  ingredients: {
-    [key:string]: number;
-  },
-  prices: {
-    [key:string]: number;
-  },
-  totalPrice: number;
   purchasable: boolean;
   purchasing: boolean;
   loading: boolean;
 }
 
 interface Props {
-  history:any
+  history: any,
+  ingredients: {
+    [key: string]: number;
+  },
+  totalPrice: number;
+
+  onIngredientAdded: Function;
+  onIngredientRemoved: Function;
 }
 
 class SubwayBuilder extends Component<Props, State>{
   state: State = {
-    ingredients: {},
-    prices: {
-      salad: 0.5,
-      cheese: 0.5,
-      meat: 1.5,
-      bacon: 0.7
-    },
-    totalPrice: 3,
     purchasable: false,
     purchasing: false,
     loading: false
@@ -43,117 +38,84 @@ class SubwayBuilder extends Component<Props, State>{
 
   componentDidMount() {
     console.log(this.props)
-      axios.get('https://subway-builder.firebaseio.com/ingredients.json')
-      .then(response => {
-        this.setState({ingredients: response.data})
-      })
-      .catch(error => {})
+    // axios.get('https://subway-builder.firebaseio.com/ingredients.json')
+    //   .then(response => {
+    //     this.setState({ ingredients: response.data })
+    //   })
+    //   .catch(error => { })
   }
 
-  addIngredientHandler = (type:string) => {
-    const updatedCount = this.state.ingredients[type] + 1
-    const updatedIngredients = {
-      ...this.state.ingredients
-    }
-    updatedIngredients[type] = updatedCount
-
-    const priceAddition = this.state.prices[type]
-    const newPrice = this.state.totalPrice + priceAddition
-    this.setState({ingredients: updatedIngredients, totalPrice: newPrice})
-    this.updatePurchaseState(updatedIngredients)
-  }
-
-  removeIngredientHandler = (type:string) => {
-    const oldCount = this.state.ingredients[type]
-    if(oldCount <= 0){
-      return
-    }
-    const updatedCount =  oldCount - 1
-    const updatedIngredients = {
-      ...this.state.ingredients
-    }
-    updatedIngredients[type] = updatedCount
-
-    const priceDeduction = this.state.prices[type]
-    const newPrice = this.state.totalPrice - priceDeduction
-    this.setState({ingredients: updatedIngredients, totalPrice: newPrice})
-    this.updatePurchaseState(updatedIngredients)
-  }
-
-  updatePurchaseState(ingredients:{[key:string]:number}){
+  updatePurchaseState(ingredients: { [key: string]: number }) {
     const sum = Object.keys(ingredients)
-    .map(igKey => {
-      return ingredients[igKey]
-    })
-    .reduce((sum,el) => {
-      return sum + el
-    },0)
+      .map(igKey => {
+        return ingredients[igKey]
+      })
+      .reduce((sum, el) => {
+        return sum + el
+      }, 0)
 
-    this.setState({purchasable: sum > 0})
+    this.setState({ purchasable: sum > 0 })
   }
 
   purchaseHandler = () => {
-    this.setState({purchasing:true})
+    this.setState({ purchasing: true })
   }
 
   purchaseCancelHandler = () => {
-    this.setState({purchasing:false})
+    this.setState({ purchasing: false })
   }
 
   purchaseContinueHandler = () => {
-
-
     const queryParams = []
-    for(let i in this.state.ingredients){
-      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i].toString()))
+    for (let i in this.props.ingredients) {
+      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ingredients[i].toString()))
     }
-    queryParams.push(`price=${this.state.totalPrice}`)
+    queryParams.push(`price=${this.props.totalPrice}`)
     const queryString = queryParams.join('&')
     this.props.history.push({
-      pathname:'/checkout',
+      pathname: '/checkout',
       search: queryString
     })
   }
 
   render() {
-    const disabledInfo:any = {
-      ...this.state.ingredients
+    const disabledInfo: any = {
+      ...this.props.ingredients
     }
 
-    for(let key in disabledInfo){
+    for (let key in disabledInfo) {
       disabledInfo[key] = (disabledInfo[key] <= 0)
     }
 
     let orderSummary = <Spinner />
 
-
     let sandwich = <Spinner />
-    if(this.state.ingredients != null){
-       sandwich = (
-         <Aux>
-          <Sandwich ingredients={this.state.ingredients}/>
+    if (this.props.ingredients != null) {
+      sandwich = (
+        <Aux>
+          <Sandwich ingredients={this.props.ingredients} />
           <BuildControls
-              ingredientAdded={this.addIngredientHandler}
-              ingredientRemoved={this.removeIngredientHandler}
-              disabled={disabledInfo}
-              price={this.state.totalPrice}
-              purchasable={this.state.purchasable}
-              ordered={this.purchaseHandler}
+            ingredientAdded={this.props.onIngredientAdded}
+            ingredientRemoved={this.props.onIngredientRemoved}
+            disabled={disabledInfo}
+            price={this.props.totalPrice}
+            purchasable={this.state.purchasable}
+            ordered={this.purchaseHandler}
           />
         </Aux>
       )
       orderSummary = (
         <OrderSummary
-          ingredients={this.state.ingredients}
+          ingredients={this.props.ingredients}
           purchaseCanceled={this.purchaseCancelHandler}
           purchaseContinued={this.purchaseContinueHandler}
-          price={this.state.totalPrice}
+          price={this.props.totalPrice}
         />
       )
     }
 
-    if(this.state.loading){
-      orderSummary = <Spinner/>
+    if (this.state.loading) {
+      orderSummary = <Spinner />
     }
     return (
       <Aux>
@@ -167,4 +129,18 @@ class SubwayBuilder extends Component<Props, State>{
   }
 }
 
-export default WithErrorHandler(SubwayBuilder, axios)
+const mapStateToProps = (state) => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onIngredientAdded: (ingredient) => dispatch({ type: types.ADD_INGREDIENT, ingredient: ingredient }),
+    onIngredientRemoved: (ingredient) => dispatch({ type: types.REMOVE_INGREDIENT, ingredient: ingredient })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WithErrorHandler(SubwayBuilder, axios))

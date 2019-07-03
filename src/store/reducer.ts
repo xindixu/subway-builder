@@ -19,27 +19,36 @@ const initState: SubwayState = {
     cheese: 0,
     meat: 0
   },
-  prices: null,
-  totalPrice: 0
+  prices: {
+    salad: 0.5,
+    cheese: 0.5,
+    meat: 1.5,
+    bacon: 0.7
+  },
+  totalPrice: 3
 }
 
 const reducer = (state = initState, action: any) => {
   switch (action.type) {
     case types.ADD_INGREDIENT:
+      console.log(state.ingredients[action.ingredientName] + 1)
       return {
         ...state,
         ingredients: {
           ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] + 1
-        }
+          [action.ingredient]: state.ingredients[action.ingredient] + 1
+        },
+        totalPrice: state.totalPrice + state.prices[action.ingredient]
       }
     case types.REMOVE_INGREDIENT:
       return {
         ...state,
         ingredients: {
           ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] - 1
-        }
+          [action.ingredient]: state.ingredients[action.ingredient] - 1
+        },
+        totalPrice: state.totalPrice - state.prices[action.ingredient]
+
       }
     default:
       return state
