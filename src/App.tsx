@@ -10,10 +10,9 @@ class App extends Component {
     return (
 
       <Layout>
-        <Route path="/checkout" component={Checkout}/>
-        <Route path="/" exact component={SubwayBuilder}/>
-        <Route path="/orders" component={Orders}/>
-
+        <Route path="/checkout" component={Checkout} />
+        <Route path="/" exact component={SubwayBuilder} />
+        <Route path="/orders" component={Orders} />
       </Layout>
 
     );
