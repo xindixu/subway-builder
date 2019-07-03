@@ -54,7 +54,7 @@ class SubwayBuilder extends Component<Props, State>{
         return sum + el
       }, 0)
 
-    this.setState({ purchasable: sum > 0 })
+    return sum > 0
   }
 
   purchaseHandler = () => {
@@ -66,16 +66,7 @@ class SubwayBuilder extends Component<Props, State>{
   }
 
   purchaseContinueHandler = () => {
-    const queryParams = []
-    for (let i in this.props.ingredients) {
-      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ingredients[i].toString()))
-    }
-    queryParams.push(`price=${this.props.totalPrice}`)
-    const queryString = queryParams.join('&')
-    this.props.history.push({
-      pathname: '/checkout',
-      search: queryString
-    })
+    this.props.history.push('/checkout')
   }
 
   render() {
@@ -99,7 +90,7 @@ class SubwayBuilder extends Component<Props, State>{
             ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
             price={this.props.totalPrice}
-            purchasable={this.state.purchasable}
+            purchasable={this.updatePurchaseState(this.props.ingredients)}
             ordered={this.purchaseHandler}
           />
         </Aux>
