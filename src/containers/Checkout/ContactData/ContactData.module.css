@@ -7,8 +7,7 @@
   shadow: 1px 2px #ccc;
 }
 
-.
-@media (min-width:600px) {
+. @media (min-width:600px) {
   .ContactData {
     margin: 20px auto;
     width: 500px;
