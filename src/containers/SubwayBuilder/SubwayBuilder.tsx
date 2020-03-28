@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as types from '../../store/action'
-
-import Aux from '../../hoc/Aux'
 import Sandwich from '../../components/Sandwich/Sandwich'
 import BuildControls from '../../components/Sandwich/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
@@ -83,7 +81,7 @@ class SubwayBuilder extends Component<Props, State>{
     let sandwich = <Spinner />
     if (this.props.ingredients != null) {
       sandwich = (
-        <Aux>
+        <>
           <Sandwich ingredients={this.props.ingredients} />
           <BuildControls
             ingredientAdded={this.props.onIngredientAdded}
@@ -93,7 +91,7 @@ class SubwayBuilder extends Component<Props, State>{
             purchasable={this.updatePurchaseState(this.props.ingredients)}
             ordered={this.purchaseHandler}
           />
-        </Aux>
+        </>
       )
       orderSummary = (
         <OrderSummary
@@ -109,13 +107,13 @@ class SubwayBuilder extends Component<Props, State>{
       orderSummary = <Spinner />
     }
     return (
-      <Aux>
+      <>
         {sandwich}
         <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
 
-      </Aux>
+      </>
     )
   }
 }

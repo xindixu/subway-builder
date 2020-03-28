@@ -31,7 +31,6 @@ const initState: SubwayState = {
 const reducer = (state = initState, action: any) => {
   switch (action.type) {
     case types.ADD_INGREDIENT:
-      console.log(state.ingredients[action.ingredientName] + 1)
       return {
         ...state,
         ingredients: {
