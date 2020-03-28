@@ -8,30 +8,26 @@ export interface SubwayState {
   prices: {
     [key: string]: number;
   },
-  totalPrice: number;
+  totalPrice: number,
+  error: boolean
 }
 
 
 const initState: SubwayState = {
-  ingredients: {
-    salad: 0,
-    bacon: 0,
-    cheese: 0,
-    meat: 0
-  },
+  ingredients: {},
   prices: {
     salad: 0.5,
     cheese: 0.5,
     meat: 1.5,
     bacon: 0.7
   },
-  totalPrice: 3
+  totalPrice: 3,
+  error: false
 }
 
 const reducer = (state = initState, action: any) => {
   switch (action.type) {
     case types.ADD_INGREDIENT:
-      console.log(action.ingredient)
       return {
         ...state,
         ingredients: {
@@ -48,11 +44,22 @@ const reducer = (state = initState, action: any) => {
           [action.ingredient]: state.ingredients[action.ingredient] - 1
         },
         totalPrice: state.totalPrice - state.prices[action.ingredient]
-
+      }
+    
+    case types.SET_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: action.ingredients,
+        error: false
+      }
+  
+      case types.FETCH_INGREDIENT_FAILED:
+      return {
+        ...state,
+        error: true
       }
     default:
       return state
-
   }
 }
 

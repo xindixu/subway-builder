@@ -7,9 +7,9 @@ import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Sandwich/OrderSummary/OrderSummary'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler'
-
 import axios from '../../axios-orders'
-import {addIngredient, removeIngredient}from '../../store/actions'
+
+import { addIngredient, removeIngredient, initIngredients } from '../../store/actions'
 
 interface State {
   purchasable: boolean;
@@ -18,14 +18,15 @@ interface State {
 }
 
 interface Props {
-  history: any,
+  history: any;
   ingredients: {
     [key: string]: number;
   },
   totalPrice: number;
-
+  error: boolean;
   onIngredientAdded: Function;
   onIngredientRemoved: Function;
+  onInitIngredients: Function;
 }
 
 class SubwayBuilder extends Component<Props, State>{
@@ -37,11 +38,7 @@ class SubwayBuilder extends Component<Props, State>{
 
   componentDidMount() {
     console.log(this.props)
-    // axios.get('https://subway-builder.firebaseio.com/ingredients.json')
-    //   .then(response => {
-    //     this.setState({ ingredients: response.data })
-    //   })
-    //   .catch(error => { })
+    this.props.onInitIngredients()
   }
 
   updatePurchaseState(ingredients: { [key: string]: number }) {
@@ -77,10 +74,10 @@ class SubwayBuilder extends Component<Props, State>{
       disabledInfo[key] = (disabledInfo[key] <= 0)
     }
 
-    let orderSummary = <Spinner />
-
-    let sandwich = <Spinner />
-    if (this.props.ingredients != null) {
+    let orderSummary = null
+    let sandwich = null
+    
+    if (this.props.ingredients) {
       sandwich = (
         <>
           <Sandwich ingredients={this.props.ingredients} />
@@ -107,13 +104,14 @@ class SubwayBuilder extends Component<Props, State>{
     if (this.state.loading) {
       orderSummary = <Spinner />
     }
+
+  
     return (
       <>
         {sandwich}
         <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
-
       </>
     )
   }
@@ -122,14 +120,16 @@ class SubwayBuilder extends Component<Props, State>{
 const mapStateToProps = (state) => {
   return {
     ingredients: state.ingredients,
-    totalPrice: state.totalPrice
+    totalPrice: state.totalPrice,
+    error: state.error
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onIngredientAdded: (ingredient) => dispatch(addIngredient(ingredient)),
-    onIngredientRemoved: (ingredient) => dispatch(removeIngredient(ingredient))
+    onIngredientRemoved: (ingredient) => dispatch(removeIngredient(ingredient)),
+    onInitIngredients: () => dispatch(initIngredients())
   }
 }
 
