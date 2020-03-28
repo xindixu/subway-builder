@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
+import {isEmpty} from '../../utils'
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary'
 import ContactData from './ContactData/ContactData'
-
 
 interface ingredients {
     [key: string]: number
@@ -27,19 +27,25 @@ class Checkout extends Component<Props> {
     }
 
     render() {
-        return (
-            <div>
-                <CheckoutSummary
-                    ingredients={this.props.ingredients}
-                    checkoutCancelled={this.checkoutCancelledHandler}
-                    checkoutContinued={this.checkoutContinuedHandler}
-                />
-                <Route
-                    path={this.props.match.path + '/contact'}
-                    component={ContactData}
-                />
-            </div>
-        )
+        let summary = <Redirect to="/" />
+        if (!isEmpty(this.props.ingredients)) {
+
+            summary = (
+                <>
+                    <CheckoutSummary
+                        ingredients={this.props.ingredients}
+                        checkoutCancelled={this.checkoutCancelledHandler}
+                        checkoutContinued={this.checkoutContinuedHandler}
+                    />
+                    <Route
+                        path={this.props.match.path + '/contact'}
+                        component={ContactData}
+                    />
+                </>
+
+            )
+        }
+        return summary
     }
 }
 
