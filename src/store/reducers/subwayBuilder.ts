@@ -1,4 +1,3 @@
-import { Reducer } from 'redux';
 import * as types from '../actions/actionTypes'
 
 export interface SubwayState {
