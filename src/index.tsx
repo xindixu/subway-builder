@@ -10,8 +10,15 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './store/reducer'
 
-const store = createStore(reducer)
+declare global {
+  interface Window { __REDUX_DEVTOOLS_EXTENSION__: any; }
+}
 
+/* eslint-disable no-underscore-dangle */
+const store = createStore(reducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+)
+/* eslint-enable */
 
 const app = (
   <Provider store={store}>
