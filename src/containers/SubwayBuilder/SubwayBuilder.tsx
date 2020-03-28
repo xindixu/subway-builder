@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import * as types from '../../store/action'
+import * as types from '../../store/actions/actionTypes'
 import Sandwich from '../../components/Sandwich/Sandwich'
 import BuildControls from '../../components/Sandwich/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
@@ -9,6 +9,7 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler'
 
 import axios from '../../axios-orders'
+import {addIngredient, removeIngredient}from '../../store/actions'
 
 interface State {
   purchasable: boolean;
@@ -127,8 +128,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onIngredientAdded: (ingredient) => dispatch({ type: types.ADD_INGREDIENT, ingredient: ingredient }),
-    onIngredientRemoved: (ingredient) => dispatch({ type: types.REMOVE_INGREDIENT, ingredient: ingredient })
+    onIngredientAdded: (ingredient) => dispatch(addIngredient(ingredient)),
+    onIngredientRemoved: (ingredient) => dispatch(removeIngredient(ingredient))
   }
 }
 

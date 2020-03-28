@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import * as types from './action'
+import * as types from '../actions/actionTypes'
 
 export interface SubwayState {
   ingredients: {
@@ -31,6 +31,7 @@ const initState: SubwayState = {
 const reducer = (state = initState, action: any) => {
   switch (action.type) {
     case types.ADD_INGREDIENT:
+      console.log(action.ingredient)
       return {
         ...state,
         ingredients: {

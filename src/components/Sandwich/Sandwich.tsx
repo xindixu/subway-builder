@@ -3,8 +3,7 @@ import styles from './Sandwich.module.css'
 import SandwichIngredient from './SandwichIngredient/SandwichIngredient'
 
 const Sandwich = (props: any) => {
-
-  let transformIngredients = Object.keys(props.ingredients)
+  const transformIngredients = Object.keys(props.ingredients)
     .map(igKey => {
       return [...Array(props.ingredients[igKey])]
         .map((_, i) => {
