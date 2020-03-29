@@ -49,10 +49,11 @@ const reducer = (state = initState, action: any) => {
       return {
         ...state,
         ingredients: action.ingredients,
-        error: false
+        error: false,
+        totalPrice:  3
       }
   
-      case types.FETCH_INGREDIENT_FAILED:
+      case types.FETCH_INGREDIENTS_FAIL:
       return {
         ...state,
         error: true

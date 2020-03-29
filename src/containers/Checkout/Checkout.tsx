@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
-import {isEmpty} from '../../utils'
+import { isEmpty } from '../../utils'
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary'
 import ContactData from './ContactData/ContactData'
 
@@ -11,13 +11,13 @@ interface ingredients {
 interface Props {
     history: any
     location: any
-    match: any,
+    match: any
     ingredients: ingredients
     price: number
+    purchased: boolean
 }
 
 class Checkout extends Component<Props> {
-
     checkoutCancelledHandler = () => {
         this.props.history.goBack()
     }
@@ -29,9 +29,11 @@ class Checkout extends Component<Props> {
     render() {
         let summary = <Redirect to="/" />
         if (!isEmpty(this.props.ingredients)) {
+            const purchaseRedirect = this.props.purchased ? <Redirect to="/" /> : null
 
             summary = (
                 <>
+                    {purchaseRedirect}
                     <CheckoutSummary
                         ingredients={this.props.ingredients}
                         checkoutCancelled={this.checkoutCancelledHandler}
@@ -52,8 +54,10 @@ class Checkout extends Component<Props> {
 const mapStateToProps = state => {
     return {
         ingredients: state.subwayBuilder.ingredients,
-        totalPrice: state.subwayBuilder.totalPrice
+        totalPrice: state.subwayBuilder.totalPrice,
+        purchased: state.order.purchased
     }
 }
+
 
 export default connect(mapStateToProps)(Checkout)

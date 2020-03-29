@@ -9,24 +9,25 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler'
 import axios from '../../axios-orders'
 
-import { addIngredient, removeIngredient, initIngredients } from '../../store/actions'
+import { addIngredient, removeIngredient, initIngredients, purchaseInit } from '../../store/actions'
 
 interface State {
-  purchasable: boolean;
-  purchasing: boolean;
-  loading: boolean;
+  purchasable: boolean
+  purchasing: boolean
+  loading: boolean
 }
 
 interface Props {
-  history: any;
+  history: any
   ingredients: {
-    [key: string]: number;
+    [key: string]: number
   },
-  totalPrice: number;
-  error: boolean;
-  onIngredientAdded: Function;
-  onIngredientRemoved: Function;
-  onInitIngredients: Function;
+  totalPrice: number
+  error: boolean
+  onIngredientAdded: Function
+  onIngredientRemoved: Function
+  onInitIngredients: Function
+  onInitPurchase: Function
 }
 
 class SubwayBuilder extends Component<Props, State>{
@@ -63,6 +64,7 @@ class SubwayBuilder extends Component<Props, State>{
 
   purchaseContinueHandler = () => {
     this.props.history.push('/checkout')
+    this.props.onInitPurchase()
   }
 
   render() {
@@ -76,7 +78,7 @@ class SubwayBuilder extends Component<Props, State>{
 
     let orderSummary = null
     let sandwich = null
-    
+
     if (this.props.ingredients) {
       sandwich = (
         <>
@@ -105,7 +107,7 @@ class SubwayBuilder extends Component<Props, State>{
       orderSummary = <Spinner />
     }
 
-  
+
     return (
       <>
         {sandwich}
@@ -129,7 +131,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onIngredientAdded: (ingredient) => dispatch(addIngredient(ingredient)),
     onIngredientRemoved: (ingredient) => dispatch(removeIngredient(ingredient)),
-    onInitIngredients: () => dispatch(initIngredients())
+    onInitIngredients: () => dispatch(initIngredients()),
+    onInitPurchase: () => dispatch(purchaseInit())
   }
 }
 
