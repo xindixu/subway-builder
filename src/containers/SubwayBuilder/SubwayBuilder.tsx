@@ -119,9 +119,9 @@ class SubwayBuilder extends Component<Props, State>{
 
 const mapStateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice,
-    error: state.error
+    ingredients: state.subwayBuilder.ingredients,
+    totalPrice: state.subwayBuilder.totalPrice,
+    error: state.subwayBuilder.error
   }
 }
 
