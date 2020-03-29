@@ -16,15 +16,15 @@ export const purchaseFail = (error) => {
   }
 }
 
-export const purchaseBurgerStart = () => {
+export const purchaseSubwayStart = () => {
   return {
     type: types.PURCHASE_START
   }
 }
 
-export const purchaseBurger = (orderData) => {
+export const purchaseSubway = (orderData) => {
   return dispatch => {
-    dispatch(purchaseBurgerStart())
+    dispatch(purchaseSubwayStart())
     axios
       .post('/orders.json', orderData)
       .then(response => {
@@ -32,7 +32,6 @@ export const purchaseBurger = (orderData) => {
       })
       .catch(error => {
         dispatch(purchaseFail(error))
-
       })
   }
 }
@@ -40,5 +39,47 @@ export const purchaseBurger = (orderData) => {
 export const purchaseInit = () => {
   return {
     type: types.PURCHASE_INIT
+  }
+}
+
+export const fetchOrdersSuccess = (orders) => {
+  return {
+    type: types.FETCH_ORDERS_SUCCESS,
+    orders: orders,
+  }
+}
+
+export const fetchOrdersFail = (error) => {
+  return {
+    type: types.FETCH_ORDERS_FAIL,
+    error: error
+  }
+}
+
+export const fetchOrdersStart = () => {
+  return {
+    type: types.FETCH_ORDERS_START
+  }
+}
+
+export const fetchOrders = () => {
+  return dispatch => {
+    dispatch(purchaseSubwayStart())
+    axios.get('/orders.json')
+      .then(response => {
+        const fetchedOrders = []
+        for (let key in response.data) {
+          fetchedOrders.push(
+            {
+              ...response.data[key],
+              id: key
+            }
+          )
+        }
+        dispatch(fetchOrdersSuccess(fetchedOrders))
+      })
+      .catch(error => {
+        dispatch(fetchOrdersFail(error))
+      })
   }
 }

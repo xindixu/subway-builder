@@ -2,7 +2,6 @@ import * as types from './actionTypes'
 import axios from '../../axios-orders'
 
 export const addIngredient = (name) => {
-  console.log(name)
   return {
     type: types.ADD_INGREDIENT,
     ingredient: name

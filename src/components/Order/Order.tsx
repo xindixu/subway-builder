@@ -1,17 +1,17 @@
 import React from 'react';
 import styles from './Order.module.css'
 
-interface order{
-  ingredients:{
-    [key:string]:number
+interface order {
+  ingredients: {
+    [key: string]: number
   },
-  price:number,
-  key:string
+  totalPrice: number,
+  id: string
 }
 
-const Order = (props:order) => {
-  const ingredients:Array<{name:string, amount:number}> = []
-  for( let name in props.ingredients){
+const Order = (props: order) => {
+  const ingredients: Array<{ name: string, amount: number }> = []
+  for (let name in props.ingredients) {
     ingredients.push({
       name: name,
       amount: props.ingredients[name]
@@ -36,7 +36,7 @@ const Order = (props:order) => {
   return (
     <div className={styles.Order}>
       <p>Ingredients: {ingredientOutput}</p>
-      <p>Price: <strong>$ {props.price.toFixed(2)}</strong></p>
+      <p>Price: <strong>$ {props.totalPrice.toFixed(2)}</strong></p>
     </div>
   );
 }

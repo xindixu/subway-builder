@@ -7,10 +7,10 @@ type MyProps = {
 }
 
 class SandwichIngredient extends Component<MyProps> {
-  render(){
-    let ingredient:any 
+  render() {
+    let ingredient: any
 
-    switch (this.props.type){
+    switch (this.props.type) {
       case ('bread-bottom'):
         ingredient = <div className={styles.BreadBottom}></div>
         break
