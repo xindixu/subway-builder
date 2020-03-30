@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Button from '../../../components/UI/Button/Button'
-import styles from './ContactData.module.css'
-import axios from '../../../axios-orders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
 import Input from '../../../components/UI/Input/Input'
 import withErrorHandler from '../../../hoc/WithErrorHandler/WithErrorHandler'
+import styles from './ContactData.module.css'
+import axios from '../../../axios-orders'
 import { purchaseSubway } from '../../../store/actions'
 
 interface Props {
@@ -35,6 +35,10 @@ interface Input {
 
 interface Validation {
   required?: boolean
+  minLength?: number
+  maxLength?: number
+  isEmail?: boolean
+  isNumeric?: boolean
 }
 
 class ContactData extends Component<Props, State> {
@@ -137,6 +141,20 @@ class ContactData extends Component<Props, State> {
     if (rules.required) {
       isValid = value.trim() !== ''
     }
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength && isValid
+    }
+    if (rules.maxLength) {
+      isValid = value.length <= rules.maxLength && isValid
+    }
+    if (rules.isEmail) {
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      isValid = pattern.test(value) && isValid
+    }
+    if (rules.isNumeric) {
+      const pattern = /^\d+$/;
+      isValid = pattern.test(value) && isValid
+    }
     return isValid
   }
 
@@ -191,6 +209,15 @@ class ContactData extends Component<Props, State> {
             />
           )
         })}
+      </form>
+    )
+    if (this.props.loading) {
+      form = <Spinner />
+    }
+    return (
+      <div className={styles.Contact}>
+        <h4>Enter your Contact Data</h4>
+        {form}
         <Button
           btnType="Success"
           disabled={!this.state.formIsValid}
@@ -198,15 +225,6 @@ class ContactData extends Component<Props, State> {
         >
           ORDER
         </Button>
-      </form>
-    )
-    if (this.props.loading) {
-      form = <Spinner />
-    }
-    return (
-      <div className={styles.ContactData}>
-        <h4>Enter your Contact Data</h4>
-        {form}
       </div>
     )
   }
