@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Button from '../../components/UI/Button/Button'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import Input from '../../components/UI/Input/Input'
 import styles from './Auth.module.css'
+import { auth } from '../../store/actions'
 
 interface Input {
   label: string
@@ -23,6 +25,7 @@ interface Validation {
 }
 
 interface Props {
+  onAuth: Function
 }
 
 interface State {
@@ -121,6 +124,12 @@ class Auth extends Component<Props, State> {
     this.setState({ formIsValid: formIsValid })
   }
 
+  submitHandler = (event) => {
+    event.preventDefault()
+    const {email, password} = this.state.authForm
+    this.props.onAuth(email, password)
+  }
+
   render() {
     const formElementsArray: Array<{ key: string; config: Input }> = []
     for (let key in this.state.authForm) {
@@ -160,7 +169,7 @@ class Auth extends Component<Props, State> {
         <Button
           btnType="Success"
           disabled={!this.state.formIsValid}
-          clicked={this.authHandler}
+          clicked={this.submitHandler}
         >
           Sign In
         </Button>
@@ -169,4 +178,9 @@ class Auth extends Component<Props, State> {
   }
 }
 
-export default Auth
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuth: (email, password) => dispatch(auth(email, password))
+  }
+}
+export default connect(null, mapDispatchToProps)(Auth)
