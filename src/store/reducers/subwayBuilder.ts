@@ -24,36 +24,40 @@ const initState: SubwayState = {
   error: false
 }
 
+const addIngredient = (state, action) => ({
+  ...state,
+  ingredients: {
+    ...state.ingredients,
+    [action.ingredient]: state.ingredients[action.ingredient] + 1
+  },
+  totalPrice: state.totalPrice + state.prices[action.ingredient]
+})
+
+const removeIngredient = (state, action) => ({
+  ...state,
+  ingredients: {
+    ...state.ingredients,
+    [action.ingredient]: state.ingredients[action.ingredient] - 1
+  },
+  totalPrice: state.totalPrice - state.prices[action.ingredient]
+})
+
+const setIngredients = (state, action) => ({
+  ...state,
+  ingredients: action.ingredients,
+  error: false,
+  totalPrice: 3
+})
+
 const reducer = (state = initState, action: any) => {
   switch (action.type) {
     case types.ADD_INGREDIENT:
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredient]: state.ingredients[action.ingredient] + 1
-        },
-        totalPrice: state.totalPrice + state.prices[action.ingredient]
-      }
+      return addIngredient(state, action)
     case types.REMOVE_INGREDIENT:
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredient]: state.ingredients[action.ingredient] - 1
-        },
-        totalPrice: state.totalPrice - state.prices[action.ingredient]
-      }
-    
+      return removeIngredient(state, action)
     case types.SET_INGREDIENTS:
-      return {
-        ...state,
-        ingredients: action.ingredients,
-        error: false,
-        totalPrice:  3
-      }
-  
-      case types.FETCH_INGREDIENTS_FAIL:
+      return setIngredients(state, action)
+    case types.FETCH_INGREDIENTS_FAIL:
       return {
         ...state,
         error: true

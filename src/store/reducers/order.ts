@@ -6,6 +6,19 @@ const initialState = {
   purchased: false
 }
 
+const purchaseSuccess = (state, action) => {
+  const newOrder = {
+    ...action.orderData,
+    id: action.orderId,
+  }
+  return {
+    ...state,
+    loading: false,
+    orders: state.orders.concat(newOrder),
+    purchased: true
+  }
+}
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case types.PURCHASE_INIT:
@@ -18,18 +31,8 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: true
       }
-    case types.PURCHASE_SUCCESS: {
-      const newOrder = {
-        ...action.orderData,
-        id: action.orderId,
-      }
-      return {
-        ...state,
-        loading: false,
-        orders: state.orders.concat(newOrder),
-        purchased: true
-      }
-    }
+    case types.PURCHASE_SUCCESS: 
+      return purchaseSuccess(state, action)
     case types.PURCHASE_FAIL:
       return {
         ...state,
